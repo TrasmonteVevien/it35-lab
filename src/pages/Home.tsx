@@ -66,5 +66,6 @@ return (
      </IonTabs>
       </IonReactRouter>
 );
-};
+};  
+ export default Home;
  
