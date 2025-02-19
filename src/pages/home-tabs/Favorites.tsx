@@ -7,7 +7,7 @@ import {
       IonTitle, 
       IonToolbar 
   } from '@ionic/react';
-  const Feed: React.FC = () => {
+  const Favorites: React.FC = () => {
     return (
       <IonPage>
         <IonHeader>
@@ -15,12 +15,24 @@ import {
             <IonButtons slot='start'>
               <IonMenuButton></IonMenuButton>
             </IonButtons>
-            <IonTitle>Feed</IonTitle>
+            <IonTitle>Favorites</IonTitle>
           </IonToolbar>
         </IonHeader>
         <IonContent fullscreen>
+          
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            height: '100%',
+          }}
+        >
+          Favorites
+        </div>
+
         </IonContent>
       </IonPage>
     );
   };
-  export default Feed;
+  export default Favorites;
