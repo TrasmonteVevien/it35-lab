@@ -19,12 +19,11 @@ const Example: React.FC = () => {
   return (
     <IonCard>
       <IonCardHeader>
-        <IonCardTitle>Card Title</IonCardTitle>
-        <IonCardSubtitle>Card Subtitle</IonCardSubtitle>
+        <IonCardTitle>Welcome aboard!</IonCardTitle>
+        <IonCardSubtitle>Book now.</IonCardSubtitle>
       </IonCardHeader>
-
       <IonCardContent>
-        Here's a small text description for the card content. Nothing more, nothing less.
+       For commuters and Drivers site.
       </IonCardContent>
 
       <IonButton fill="clear">Action 1</IonButton>
