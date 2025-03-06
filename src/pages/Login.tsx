@@ -1,3 +1,4 @@
+import React, { useEffect, useRef } from 'react';
 import {
   IonButton,
   IonButtons,
@@ -10,7 +11,8 @@ import {
   IonPage,
   IonTitle,
   IonToolbar,
-  useIonRouter
+  useIonRouter,
+  IonCheckbox
 } from '@ionic/react';
 
 import { personCircleOutline } from 'ionicons/icons';
@@ -20,6 +22,14 @@ function Login() {
   const doLogin = () => {
     navigation.push('/it35-lab/app', 'forward', 'replace');
   };
+
+  const ref = useRef<HTMLAnchorElement>(null);
+
+  useEffect(() => {
+    ref.current?.addEventListener('click', (event) => {
+      event.stopPropagation();
+    });
+  }, [ref]);
 
   return (
     <IonPage>
@@ -36,16 +46,25 @@ function Login() {
           <IonIcon icon={personCircleOutline} style={{ fontSize: '80px' }} />
         </div>
         <IonItem>
-          <IonInput label="Username" placeholder="Enter Username"></IonInput>
+          <IonInput label='Username' placeholder='Enter Username'></IonInput>
         </IonItem>
         <IonItem>
-          <IonInput label="Password" type="password" placeholder="Enter Password"></IonInput>
+          <IonInput label='Password' type='password' placeholder='Enter Password'></IonInput>
         </IonItem>
-        <IonButton onClick={() => doLogin()} expand="full">
+        <IonItem>
+          <IonCheckbox>
+            I agree to the{' '}
+            <a href='#' ref={ref}>
+              terms and conditions
+            </a>
+          </IonCheckbox>
+        </IonItem>
+        <IonButton onClick={() => doLogin()} expand='full'>
           Login
         </IonButton>
       </IonContent>
     </IonPage>
   );
 }
+
 export default Login;
