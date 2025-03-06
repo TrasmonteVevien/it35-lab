@@ -48,3 +48,4 @@ function Login() {
     </IonPage>
   );
 }
+export default Login;
