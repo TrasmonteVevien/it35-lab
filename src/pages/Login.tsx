@@ -1,70 +1,84 @@
-import React, { useEffect, useRef } from 'react';
-import {
-  IonButton,
-  IonButtons,
-  IonContent,
-  IonHeader,
-  IonIcon,
-  IonInput,
-  IonItem,
-  IonMenuButton,
-  IonPage,
-  IonTitle,
-  IonToolbar,
-  useIonRouter,
-  IonCheckbox
+import React, { useState } from 'react';
+import { 
+    IonButton,
+    IonContent, 
+    IonHeader, 
+    IonPage, 
+    IonTitle, 
+    IonToolbar, 
+    IonInput,
+    IonItem,
+    IonLabel,
+    IonList,
+    IonToast,
+    IonFooter
 } from '@ionic/react';
+import { useHistory } from 'react-router-dom'; 
 
-import { personCircleOutline } from 'ionicons/icons';
+const Login: React.FC = () => {
+    const history = useHistory();
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const [showToast, setShowToast] = useState(false);
+    const [toastMessage, setToastMessage] = useState('');
 
-function Login() {
-  const navigation = useIonRouter();
-  const doLogin = () => {
-    navigation.push('/it35-lab/app', 'forward', 'replace');
-  };
+    const doLogin = () => {
+ 
+        const storedUsername = localStorage.getItem('username');
+        const storedPassword = localStorage.getItem('password');
 
-  const ref = useRef<HTMLAnchorElement>(null);
 
-  useEffect(() => {
-    ref.current?.addEventListener('click', (event) => {
-      event.stopPropagation();
-    });
-  }, [ref]);
+        if (!storedUsername || !storedPassword) {
+            setToastMessage("No account found. Please register first.");
+            setShowToast(true);
+            return;
+        }
 
-  return (
-    <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonButtons slot='start'>
-            <IonMenuButton></IonMenuButton>
-          </IonButtons>
-          <IonTitle>Login</IonTitle>
-        </IonToolbar>
-      </IonHeader>
-      <IonContent className='ion-padding'>
-        <div style={{ textAlign: 'center', marginBottom: '20px' }}>
-          <IonIcon icon={personCircleOutline} style={{ fontSize: '80px' }} />
-        </div>
-        <IonItem>
-          <IonInput label='Username' placeholder='Enter Username'></IonInput>
-        </IonItem>
-        <IonItem>
-          <IonInput label='Password' type='password' placeholder='Enter Password'></IonInput>
-        </IonItem>
-        <IonItem>
-          <IonCheckbox>
-            I agree to the{' '}
-            <a href='#' ref={ref}>
-              terms and conditions
-            </a>
-          </IonCheckbox>
-        </IonItem>
-        <IonButton onClick={() => doLogin()} expand='full'>
-          Login
-        </IonButton>
-      </IonContent>
-    </IonPage>
-  );
-}
+        if (username === storedUsername && password === storedPassword) {
+            setToastMessage("Login Successful!"); 
+            setShowToast(true); 
+
+         
+            setTimeout(() => {
+                history.push('/it35-lab/app'); 
+            }, 2000); 
+        } else {
+            setToastMessage("Invalid username or password.");
+            setShowToast(true); 
+        }
+    };
+
+    return (
+        <IonPage>
+            <IonHeader>
+                <IonToolbar>
+                    <IonTitle>Login</IonTitle>
+                </IonToolbar>
+            </IonHeader>
+            <IonContent className='ion-padding'>
+                <IonList>
+                    <IonItem>
+                        <IonLabel position="floating">Username</IonLabel>
+                        <IonInput value={username} onIonChange={e => setUsername(e.detail.value!)} />
+                    </IonItem>
+                    <IonItem>
+                        <IonLabel position="floating">Password</IonLabel>
+                        <IonInput type="password" value={password} onIonChange={e => setPassword(e.detail.value!)} />
+                    </IonItem>
+                </IonList>
+                <IonButton onClick={doLogin} expand="full">Login</IonButton>
+                <IonButton onClick={() => history.push('/signup')} expand="full" color="secondary">Register</IonButton> {}
+            </IonContent>
+            <IonFooter>
+                <IonToast
+                    isOpen={showToast}
+                    onDidDismiss={() => setShowToast(false)}
+                    message={toastMessage}
+                    duration={2000}
+                />
+            </IonFooter>
+        </IonPage>
+    );
+};
 
 export default Login;
