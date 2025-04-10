@@ -1,7 +1,7 @@
 import { 
-    IonAlert,
-    IonAvatar,
-    IonButton,
+  IonAlert,
+  IonAvatar,
+ IonButton,
     IonContent, 
     IonIcon, 
     IonInput, 
