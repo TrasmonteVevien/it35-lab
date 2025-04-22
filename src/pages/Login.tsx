@@ -36,18 +36,22 @@ import {
   
     const doLogin = async () => {
       const { error } = await supabase.auth.signInWithPassword({ email, password });
-  
+    
       if (error) {
         setAlertMessage(error.message);
         setShowAlert(true);
         return;
       }
-  
+    
+      console.log('User logged in successfully:', email); // ✅ Log success to the console
       setShowToast(true); 
+      
       setTimeout(() => {
         navigation.push('/it35-lab/app', 'forward', 'replace');
       }, 300);
+      
     };
+    
     
     return (
       <IonPage>
