@@ -23,9 +23,10 @@ import { Redirect, Route } from 'react-router';
 import Home from './Home';
 import About from './About';
 import Details from './Details';
+import EditProfile from './EditProfile';
 import { supabase } from '../utils/supabaseClient';
 import { useEffect, useState } from 'react';
-import EditProfile from './EditProfile';
+
 
 
   const Menu: React.FC = () => {
