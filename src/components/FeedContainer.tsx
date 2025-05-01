@@ -197,7 +197,6 @@ const FeedContainer = () => {
             <IonButton onClick={() => setIsModalOpen(false)}>Cancel</IonButton>
           </IonFooter>
         </IonModal>
-
         <IonAlert
           isOpen={isAlertOpen}
           onDidDismiss={() => setIsAlertOpen(false)}
