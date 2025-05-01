@@ -1,37 +1,13 @@
-import React from 'react'; 
 import { 
-  IonButton, 
-  IonCard, 
-  IonCardContent, 
-  IonCardHeader, 
-  IonCardSubtitle, 
-  IonCardTitle, 
   IonButtons,
-  IonContent, 
-  IonHeader, 
-  IonMenuButton, 
-  IonPage, 
-  IonTitle, 
-  IonToolbar 
+    IonContent, 
+    IonHeader, 
+    IonMenuButton, 
+    IonPage, 
+    IonTitle, 
+    IonToolbar 
 } from '@ionic/react';
-
-const Example: React.FC = () => {
-  return (
-    <IonCard>
-      <IonCardHeader>
-        <IonCardTitle>Welcome aboard!</IonCardTitle>
-        <IonCardSubtitle>Book now.</IonCardSubtitle>
-      </IonCardHeader>
-      <IonCardContent>
-       For commuters and Drivers site.
-      </IonCardContent>
-
-      <IonButton fill="clear">Action 1</IonButton>
-      <IonButton fill="clear">Action 2</IonButton>
-    </IonCard>
-  );
-};
-
+import FeedContainer from '../../components/FeedContainer';
 const Feed: React.FC = () => {
   return (
     <IonPage>
@@ -44,16 +20,7 @@ const Feed: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            height: '100%',
-          }}
-        >
-          <Example />
-        </div>
+        <FeedContainer />
       </IonContent>
     </IonPage>
   );
