@@ -18,113 +18,166 @@ import {
   IonHeader,
   IonButtons,
   IonIcon,
+  IonToast,
+  IonSpinner,
 } from '@ionic/react';
+import { heart, heartOutline } from 'ionicons/icons';
+
+interface Item {
+  title: string;
+  description: string;
+}
 
 const SearchContainer: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [steps, setSteps] = useState<any[]>([]);
-  const [practices, setPractices] = useState<any[]>([]);
-  const [skills, setSkills] = useState<any[]>([]);
-  const [resources, setResources] = useState<any[]>([]);
-  const [filteredSteps, setFilteredSteps] = useState<any[]>([]);
-  const [filteredPractices, setFilteredPractices] = useState<any[]>([]);
-  const [filteredSkills, setFilteredSkills] = useState<any[]>([]);
-  const [filteredResources, setFilteredResources] = useState<any[]>([]);
-  const [isLoading, setIsLoading] = useState(false); 
-  const [selectedItem, setSelectedItem] = useState<string | null>(null);
+  const [steps, setSteps] = useState<Item[]>([]);
+  const [practices, setPractices] = useState<Item[]>([]);
+  const [skills, setSkills] = useState<Item[]>([]);
+  const [resources, setResources] = useState<Item[]>([]);
+  const [filteredSteps, setFilteredSteps] = useState<Item[]>([]);
+  const [filteredPractices, setFilteredPractices] = useState<Item[]>([]);
+  const [filteredSkills, setFilteredSkills] = useState<Item[]>([]);
+  const [filteredResources, setFilteredResources] = useState<Item[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [selectedItem, setSelectedItem] = useState<Item | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
-  
+  const [favorites, setFavorites] = useState<string[]>([]);
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
+
   const [showSteps, setShowSteps] = useState(false);
   const [showPractices, setShowPractices] = useState(false);
   const [showSkills, setShowSkills] = useState(false);
   const [showResources, setShowResources] = useState(false);
 
-  // Fetching initial data
+  const [activeCategories, setActiveCategories] = useState<string[]>([
+    'steps',
+    'practices',
+    'skills',
+    'resources',
+  ]);
+
   useEffect(() => {
-    const fetchData = () => {
-      setIsLoading(true);
+    const savedSearch = localStorage.getItem('searchTerm');
+    if (savedSearch) setSearchTerm(savedSearch);
+  }, []);
 
-      const fetchedSteps = [
-        'Ideation and Planning',
-        'Research and Market Analysis',
-        'Wireframing and Prototyping',
-        'Tech Stack Selection',
-        'Development',
-        'Testing',
-        'Launch',
-      ];
+  useEffect(() => {
+    localStorage.setItem('searchTerm', searchTerm);
+  }, [searchTerm]);
 
-      const fetchedPractices = [
-        'User-Centered Design',
-        'Agile Development',
-        'Continuous Integration and Testing',
-        'Version Control (Git)',
-        'App Performance Optimization',
-        'Security Best Practices',
-      ];
+  const fetchData = () => {
+    setIsLoading(true);
+    const fetchedSteps: Item[] = [
+      { title: 'Ideation and Planning', description: 'Define your app concept, target users, and features.' },
+      { title: 'Research and Market Analysis', description: 'Analyze market trends and competitors.' },
+      { title: 'Wireframing and Prototyping', description: 'Create low-fidelity and high-fidelity designs.' },
+      { title: 'Tech Stack Selection', description: 'Choose tools and technologies for your app.' },
+      { title: 'Development', description: 'Begin coding the frontend and backend of the app.' },
+      { title: 'Testing', description: 'Perform manual and automated testing to fix bugs.' },
+      { title: 'Launch', description: 'Deploy your app to production environments.' },
+    ];
+    const fetchedPractices: Item[] = [
+      { title: 'User-Centered Design', description: 'Design with the end user in mind for better UX.' },
+      { title: 'Agile Development', description: 'Iterative approach for adaptive planning and delivery.' },
+      { title: 'Continuous Integration and Testing', description: 'Automatically build and test with each commit.' },
+      { title: 'Version Control (Git)', description: 'Track code changes and collaborate using Git.' },
+      { title: 'App Performance Optimization', description: 'Improve loading time and responsiveness.' },
+      { title: 'Security Best Practices', description: 'Prevent attacks and protect user data.' },
+    ];
+    const fetchedSkills: Item[] = [
+      { title: 'Frontend Development (React, Vue)', description: 'Building user interfaces using modern JS frameworks.' },
+      { title: 'Backend Development (Node.js, Python)', description: 'Create server logic and APIs.' },
+      { title: 'UI/UX Design', description: 'Focus on visual and experience aspects of apps.' },
+      { title: 'API Development', description: 'Design and build RESTful or GraphQL APIs.' },
+      { title: 'Database Management', description: 'Work with SQL/NoSQL databases like MySQL or MongoDB.' },
+      { title: 'Testing and Debugging', description: 'Ensure quality through tests and troubleshooting.' },
+    ];
+    const fetchedResources: Item[] = [
+      { title: 'freeCodeCamp', description: 'Free interactive coding tutorials and certification.' },
+      { title: 'Codecademy', description: 'Interactive courses on web and app development.' },
+      { title: 'GitHub', description: 'Host and collaborate on code projects.' },
+      { title: 'Stack Overflow', description: 'Community for asking and answering coding questions.' },
+      { title: 'Figma', description: 'Collaborative UI/UX design tool for wireframes and prototypes.' },
+      { title: 'MDN Web Docs', description: 'Comprehensive documentation for web technologies.' },
+    ];
 
-      const fetchedSkills = [
-        'Frontend Development (React, Vue)',
-        'Backend Development (Node.js, Python)',
-        'UI/UX Design',
-        'API Development',
-        'Database Management',
-        'Testing and Debugging',
-      ];
+    setSteps(fetchedSteps);
+    setPractices(fetchedPractices);
+    setSkills(fetchedSkills);
+    setResources(fetchedResources);
+    setFilteredSteps(fetchedSteps);
+    setFilteredPractices(fetchedPractices);
+    setFilteredSkills(fetchedSkills);
+    setFilteredResources(fetchedResources);
+    setIsLoading(false);
+  };
 
-      const fetchedResources = [
-        'freeCodeCamp (Online tutorials)',
-        'Codecademy (Coding courses)',
-        'GitHub (Version control and open-source code)',
-        'Stack Overflow (Developer community)',
-        'Figma (Design tool)',
-        'MDN Web Docs (Web development documentation)',
-      ];
-
-      setSteps(fetchedSteps);
-      setPractices(fetchedPractices);
-      setSkills(fetchedSkills);
-      setResources(fetchedResources);
-
-      setFilteredSteps(fetchedSteps);
-      setFilteredPractices(fetchedPractices);
-      setFilteredSkills(fetchedSkills);
-      setFilteredResources(fetchedResources);
-
-      setIsLoading(false);
-    };
-
+  useEffect(() => {
     fetchData();
   }, []);
 
-  // Filter the content based on the search term
   useEffect(() => {
-    if (searchTerm.trim() === '') {
-      setFilteredSteps(steps);
-      setFilteredPractices(practices);
-      setFilteredSkills(skills);
-      setFilteredResources(resources);
-    } else {
-      setFilteredSteps(
-        steps.filter((step) => step.toLowerCase().includes(searchTerm.toLowerCase()))
-      );
-      setFilteredPractices(
-        practices.filter((practice) => practice.toLowerCase().includes(searchTerm.toLowerCase()))
-      );
-      setFilteredSkills(
-        skills.filter((skill) => skill.toLowerCase().includes(searchTerm.toLowerCase()))
-      );
-      setFilteredResources(
-        resources.filter((resource) => resource.toLowerCase().includes(searchTerm.toLowerCase()))
-      );
-    }
-  }, [searchTerm, steps, practices, skills, resources]);
+    const lowerTerm = searchTerm.toLowerCase();
+    setFilteredSteps(
+      activeCategories.includes('steps')
+        ? steps.filter((item) => item.title.toLowerCase().includes(lowerTerm))
+        : []
+    );
+    setFilteredPractices(
+      activeCategories.includes('practices')
+        ? practices.filter((item) => item.title.toLowerCase().includes(lowerTerm))
+        : []
+    );
+    setFilteredSkills(
+      activeCategories.includes('skills')
+        ? skills.filter((item) => item.title.toLowerCase().includes(lowerTerm))
+        : []
+    );
+    setFilteredResources(
+      activeCategories.includes('resources')
+        ? resources.filter((item) => item.title.toLowerCase().includes(lowerTerm))
+        : []
+    );
+  }, [searchTerm, steps, practices, skills, resources, activeCategories]);
 
-  // Handle opening the modal with item details
-  const handleItemClick = (item: string) => {
+  const handleItemClick = (item: Item) => {
     setSelectedItem(item);
     setModalOpen(true);
   };
+
+  const toggleFavorite = (title: string) => {
+    setFavorites((prev) => {
+      const updated = prev.includes(title) ? prev.filter((i) => i !== title) : [...prev, title];
+      setToastMessage(prev.includes(title) ? 'Removed from favorites' : 'Added to favorites');
+      setShowToast(true);
+      return updated;
+    });
+  };
+
+  const toggleAll = () => {
+    const toggle = !(showSteps && showPractices && showSkills && showResources);
+    setShowSteps(toggle);
+    setShowPractices(toggle);
+    setShowSkills(toggle);
+    setShowResources(toggle);
+  };
+
+  const renderItem = (item: Item, index: number) => (
+    <IonItem key={index} onClick={() => handleItemClick(item)}>
+      <IonLabel>{item.title}</IonLabel>
+      <IonButton
+        fill="clear"
+        slot="end"
+        onClick={(e) => {
+          e.stopPropagation();
+          toggleFavorite(item.title);
+        }}
+      >
+        <IonIcon icon={favorites.includes(item.title) ? heart : heartOutline} />
+      </IonButton>
+    </IonItem>
+  );
 
   return (
     <IonContent>
@@ -139,13 +192,23 @@ const SearchContainer: React.FC = () => {
         style={{ marginBottom: '20px', paddingLeft: '10px', fontSize: '16px' }}
       />
 
-      {isLoading && <IonText>Loading...</IonText>}
+      {isLoading ? <IonSpinner name="dots" /> : null}
 
-      {/* View Content Button */}
-      <IonButton onClick={() => setShowSteps(!showSteps)}>View Steps</IonButton>
-      <IonButton onClick={() => setShowPractices(!showPractices)}>View Best Practices</IonButton>
-      <IonButton onClick={() => setShowSkills(!showSkills)}>View Skills</IonButton>
-      <IonButton onClick={() => setShowResources(!showResources)}>View Resources</IonButton>
+      <IonButton onClick={toggleAll}>
+        {showSteps && showPractices && showSkills && showResources ? 'Hide All' : 'Show All'}
+      </IonButton>
+      <IonButton onClick={() => setShowSteps(!showSteps)}>
+        View Steps ({filteredSteps.length})
+      </IonButton>
+      <IonButton onClick={() => setShowPractices(!showPractices)}>
+        View Best Practices ({filteredPractices.length})
+      </IonButton>
+      <IonButton onClick={() => setShowSkills(!showSkills)}>
+        View Skills ({filteredSkills.length})
+      </IonButton>
+      <IonButton onClick={() => setShowResources(!showResources)}>
+        View Resources ({filteredResources.length})
+      </IonButton>
 
       <IonList>
         {showSteps && filteredSteps.length > 0 && (
@@ -153,11 +216,7 @@ const SearchContainer: React.FC = () => {
             <IonCardHeader>
               <IonCardTitle>Steps</IonCardTitle>
             </IonCardHeader>
-            {filteredSteps.map((step, index) => (
-              <IonItem key={index} onClick={() => handleItemClick(step)}>
-                <IonLabel>{step}</IonLabel>
-              </IonItem>
-            ))}
+            {filteredSteps.map(renderItem)}
           </IonCard>
         )}
 
@@ -166,11 +225,7 @@ const SearchContainer: React.FC = () => {
             <IonCardHeader>
               <IonCardTitle>Best Practices</IonCardTitle>
             </IonCardHeader>
-            {filteredPractices.map((practice, index) => (
-              <IonItem key={index} onClick={() => handleItemClick(practice)}>
-                <IonLabel>{practice}</IonLabel>
-              </IonItem>
-            ))}
+            {filteredPractices.map(renderItem)}
           </IonCard>
         )}
 
@@ -179,11 +234,7 @@ const SearchContainer: React.FC = () => {
             <IonCardHeader>
               <IonCardTitle>Skills</IonCardTitle>
             </IonCardHeader>
-            {filteredSkills.map((skill, index) => (
-              <IonItem key={index} onClick={() => handleItemClick(skill)}>
-                <IonLabel>{skill}</IonLabel>
-              </IonItem>
-            ))}
+            {filteredSkills.map(renderItem)}
           </IonCard>
         )}
 
@@ -192,25 +243,19 @@ const SearchContainer: React.FC = () => {
             <IonCardHeader>
               <IonCardTitle>Resources</IonCardTitle>
             </IonCardHeader>
-            {filteredResources.map((resource, index) => (
-              <IonItem key={index} onClick={() => handleItemClick(resource)}>
-                <IonLabel>{resource}</IonLabel>
-              </IonItem>
-            ))}
+            {filteredResources.map(renderItem)}
           </IonCard>
         )}
 
         {filteredSteps.length === 0 &&
           filteredPractices.length === 0 &&
           filteredSkills.length === 0 &&
-          filteredResources.length === 0 && (
-            <IonText>No results found</IonText>
-          )}
+          filteredResources.length === 0 &&
+          !isLoading && <IonText>No results found</IonText>}
       </IonList>
 
       <IonButton onClick={() => setSearchTerm('')}>Clear Search</IonButton>
 
-      {/* Modal to display selected content */}
       <IonModal isOpen={modalOpen} onDidDismiss={() => setModalOpen(false)}>
         <IonHeader>
           <IonToolbar>
@@ -222,12 +267,23 @@ const SearchContainer: React.FC = () => {
         </IonHeader>
         <IonContent>
           <IonCard>
+            <IonCardHeader>
+              <IonCardTitle>{selectedItem?.title}</IonCardTitle>
+            </IonCardHeader>
             <IonCardContent>
-              <IonText>{selectedItem}</IonText>
+              <IonText>{selectedItem?.description}</IonText>
             </IonCardContent>
           </IonCard>
         </IonContent>
       </IonModal>
+
+      <IonToast
+        isOpen={showToast}
+        onDidDismiss={() => setShowToast(false)}
+        message={toastMessage}
+        duration={1500}
+        color="primary"
+      />
     </IonContent>
   );
 };

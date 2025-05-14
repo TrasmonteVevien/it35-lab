@@ -1,11 +1,11 @@
-import { useState, useEffect } from 'react'; 
+import { useState, useEffect } from 'react';
 import {
   IonApp, IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButton,
   IonInput, IonLabel, IonModal, IonFooter, IonCard, IonCardContent, IonCardHeader,
   IonCardTitle, IonAlert, IonIcon, IonAvatar
 } from '@ionic/react';
 import { supabase } from '../utils/supabaseClient';
-import { pencil, trash, star, starOutline } from 'ionicons/icons';
+import { pencil, trash } from 'ionicons/icons';
 
 interface Feedback {
   id: string;
@@ -14,7 +14,6 @@ interface Feedback {
   rating: number;
   created_at: string;
   updated_at: string;
-  favorite: boolean; // Added favorite status
 }
 
 const FeedbackContainer: React.FC = () => {
@@ -27,7 +26,7 @@ const FeedbackContainer: React.FC = () => {
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [userId, setUserId] = useState<string | null>(null);
-  const [avatarUrl, setAvatarUrl] = useState<string | null>(null); // New state for Avatar
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [posting, setPosting] = useState(false);
 
   useEffect(() => {
@@ -64,8 +63,7 @@ const FeedbackContainer: React.FC = () => {
       const { data, error } = await supabase.from('app_dev_feedback').insert([{
         description,
         rating: parseInt(rating),
-        user_id: userId,
-        favorite: false // Default favorite is false
+        user_id: userId
       }]).select('*');
 
       if (!error && data) {
@@ -120,21 +118,6 @@ const FeedbackContainer: React.FC = () => {
     setConfirmDelete(false);
   };
 
-  const toggleFavorite = async (id: string, isFavorite: boolean) => {
-    const { error } = await supabase
-      .from('app_dev_feedback')
-      .update({ favorite: !isFavorite })
-      .match({ id });
-
-    if (error) {
-      console.error('Error updating favorite status:', error.message);
-    } else {
-      setEntries(entries.map(entry =>
-        entry.id === id ? { ...entry, favorite: !isFavorite } : entry
-      ));
-    }
-  };
-
   const closeModal = () => {
     setIsModalOpen(false);
     setEditing(null);
@@ -156,17 +139,17 @@ const FeedbackContainer: React.FC = () => {
           </IonToolbar>
         </IonHeader>
 
-        <IonContent style={{ '--background': '#000' }}>
-          <IonCard style={{ backgroundColor: '#0d1117', color: 'white' }}>
+        <IonContent style={{ '--background': '#ffffff' }}>
+          <IonCard style={{ backgroundColor: '#ffffff', color: '#000' }}>
             <IonCardHeader>
-              <IonCardTitle style={{ color: '#61dafb' }}>Share Your Thoughts</IonCardTitle>
+              <IonCardTitle style={{ color: '#007bff' }}>Share Your Thoughts</IonCardTitle>
             </IonCardHeader>
             <IonCardContent>
               <IonInput
                 value={description}
                 onIonChange={e => setDescription(e.detail.value!)}
                 placeholder="E.g., I love problem solving..."
-                style={{ color: 'white' }}
+                style={{ color: '#000' }}
               />
               <IonInput
                 type="number"
@@ -175,17 +158,14 @@ const FeedbackContainer: React.FC = () => {
                 value={rating}
                 onIonChange={e => setRating(e.detail.value!)}
                 placeholder="Rating (1-10)"
-                style={{ marginTop: '10px', color: 'white' }}
+                style={{ marginTop: '10px', color: '#000' }}
               />
             </IonCardContent>
             <div style={{ display: 'flex', justifyContent: 'flex-end', padding: '0.5rem' }}>
               <IonButton
                 onClick={createEntry}
                 disabled={!description || !rating}
-                style={{
-                  backgroundColor: posting ? '#007bff' : undefined,
-                  color: posting ? 'white' : undefined
-                }}
+                color="primary"
               >
                 Post
               </IonButton>
@@ -193,25 +173,18 @@ const FeedbackContainer: React.FC = () => {
           </IonCard>
 
           {entries.map(entry => (
-            <IonCard key={entry.id} style={{ marginTop: '1rem', backgroundColor: '#0d1117', color: 'white' }}>
+            <IonCard key={entry.id} style={{ marginTop: '1rem', backgroundColor: '#ffffff', color: '#000' }}>
               <IonCardHeader>
-                <IonCardTitle style={{ color: '#61dafb' }}>Rating: {entry.rating}/10</IonCardTitle>
+                <IonCardTitle style={{ color: '#007bff' }}>Rating: {entry.rating}/10</IonCardTitle>
               </IonCardHeader>
               <IonCardContent>
-                <IonLabel style={{ color: 'white' }}>{entry.description}</IonLabel>
+                <IonLabel style={{ color: '#000' }}>{entry.description}</IonLabel>
               </IonCardContent>
-              <IonButton fill="clear" color="light" onClick={() => startEditing(entry)}>
+              <IonButton fill="clear" color="primary" onClick={() => startEditing(entry)}>
                 <IonIcon icon={pencil} />
               </IonButton>
               <IonButton fill="clear" color="danger" onClick={() => confirmDeleteEntry(entry.id)}>
                 <IonIcon icon={trash} />
-              </IonButton>
-              <IonButton
-                fill="clear"
-                color={entry.favorite ? 'warning' : 'medium'}
-                onClick={() => toggleFavorite(entry.id, entry.favorite)}
-              >
-                <IonIcon icon={entry.favorite ? star : starOutline} />
               </IonButton>
             </IonCard>
           ))}
@@ -223,12 +196,12 @@ const FeedbackContainer: React.FC = () => {
               <IonTitle style={{ color: 'white' }}>Edit Feedback</IonTitle>
             </IonToolbar>
           </IonHeader>
-          <IonContent style={{ '--background': '#000', padding: '1rem' }}>
+          <IonContent style={{ '--background': '#ffffff', padding: '1rem' }}>
             <IonInput
               value={description}
               onIonChange={e => setDescription(e.detail.value!)}
               placeholder="Edit description"
-              style={{ color: 'white' }}
+              style={{ color: '#000' }}
             />
             <IonInput
               type="number"
@@ -237,7 +210,7 @@ const FeedbackContainer: React.FC = () => {
               value={rating}
               onIonChange={e => setRating(e.detail.value!)}
               placeholder="Edit rating (1-10)"
-              style={{ marginTop: '10px', color: 'white' }}
+              style={{ marginTop: '10px', color: '#000' }}
             />
           </IonContent>
           <IonFooter style={{ display: 'flex', justifyContent: 'space-around', padding: '1rem' }}>
