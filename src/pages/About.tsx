@@ -47,6 +47,7 @@ const About: React.FC = () => {
       </IonHeader>
 
       <IonContent fullscreen className="ion-padding" color="light">
+        {/* Introduction Section */}
         <IonCard color="primary">
           <IonCardHeader>
             <IonCardTitle>App Development with Ionic</IonCardTitle>
@@ -56,6 +57,47 @@ const About: React.FC = () => {
           </IonCardContent>
         </IonCard>
 
+        {/* Features Section */}
+        <IonCard>
+          <IonCardHeader>
+            <IonCardTitle>Features</IonCardTitle>
+          </IonCardHeader>
+          <IonCardContent>
+            <ul>
+              <li><strong>Cross-platform support:</strong> Built using Ionic, ensuring compatibility across iOS, Android, and the web.</li>
+              <li><strong>Real-time data:</strong> Backend powered by Supabase with live data synchronization.</li>
+              <li><strong>Secure authentication:</strong> Built-in user authentication with Supabase Auth.</li>
+              <li><strong>Modular components:</strong> Easy-to-use, reusable components for faster development.</li>
+            </ul>
+          </IonCardContent>
+        </IonCard>
+
+        {/* Description Section */}
+        <IonCard>
+          <IonCardHeader>
+            <IonCardTitle>Description</IonCardTitle>
+          </IonCardHeader>
+          <IonCardContent>
+            The app is designed to demonstrate modern app development practices and provide an easy-to-use interface for users. It offers a seamless experience by leveraging the best features of Ionic and React, ensuring both functionality and performance.
+          </IonCardContent>
+        </IonCard>
+
+        {/* Functionality Section */}
+        <IonCard>
+          <IonCardHeader>
+            <IonCardTitle>Functionality</IonCardTitle>
+          </IonCardHeader>
+          <IonCardContent>
+            The app allows users to:
+            <ul>
+              <li>Register and log in with secure authentication.</li>
+              <li>View and interact with various features provided by the app.</li>
+              <li>Access valuable resources and development best practices.</li>
+            </ul>
+          </IonCardContent>
+        </IonCard>
+
+        {/* App Information List */}
         <IonList>
           <IonItem>
             <IonIcon icon={informationCircleOutline} slot="start" />
@@ -90,6 +132,7 @@ const About: React.FC = () => {
           </IonItem>
         </IonList>
 
+        {/* Learn More Button */}
         <IonGrid>
           <IonRow className="ion-justify-content-center ion-padding-top">
             <IonCol size="auto">
