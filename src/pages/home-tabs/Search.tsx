@@ -1,5 +1,5 @@
 import { 
-  IonButtons,
+ IonButtons,
     IonContent, 
     IonHeader, 
     IonMenuButton, 
@@ -7,6 +7,7 @@ import {
     IonTitle, 
     IonToolbar 
 } from '@ionic/react';
+import SearchContainer from '../../components/SearchContainer';
 const Search: React.FC = () => {
   return (
     <IonPage>
@@ -19,7 +20,7 @@ const Search: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
-
+      <SearchContainer />
       <div
           style={{
             display: 'flex',
